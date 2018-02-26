@@ -17,6 +17,9 @@ num_workers = 3
 num_ps = 2
 train_data_size = 60000
 
+#gpu_fraction = 0.1
+#gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_fraction)
+#sess = tf.Session(config=tf.ConfigProto(gpu_options=gpu_options))
 
 def distributed_model(config):
 

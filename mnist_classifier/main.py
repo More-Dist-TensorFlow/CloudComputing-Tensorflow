@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -16,6 +17,8 @@ test_data_size = 10000
 
 Config = collections.namedtuple('Config', 'lr, batch_size, epoches, data_dir')
 
+gpu_fraction = 0.1
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=gpu_fraction)
 
 def train(config):
 
@@ -41,16 +44,16 @@ def train(config):
         accuracy = tf.reduce_mean(correct_prediction)
         tf.summary.scalar('accuracy', accuracy)
 
-    with tf.Session() as sess:
+    with tf.Session(config=tf.ConfigProto(gpu_options=gpu_options)) as sess:
 
         sess.run(tf.global_variables_initializer())
         # merged = tf.summary.merge_all()
         # writer = tf.summary.FileWriter("logs/", sess.graph)
         #sess.run(tf.global_variables_initializer())
 
-        for i in xrange(config.epoches):
+        for i in range(config.epoches):
             loss = 0
-            for j in xrange(train_data_size/config.batch_size):
+            for j in range(int(train_data_size/config.batch_size)):
 
                 batch = mnist.train.next_batch(config.batch_size)
                 train_step.run(feed_dict={x: batch[0], label: batch[1]})
